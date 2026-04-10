@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>How It Works — ReviewGuard</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <style>
+    .hiw-hero {
+      text-align: center;
+      padding: 5rem 1.5rem 3rem;
+      max-width: 700px; margin: 0 auto;
+    }
+
+    .pipeline {
+      max-width: 900px; margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+
+    .pipe-step {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: grid; grid-template-columns: 60px 1fr auto;
+      align-items: center; gap: 1.2rem; padding: 1.2rem 1.4rem;
+      transition: border-color 0.2s;
+    }
+
+    .pipe-step:hover { border-color: var(--border2); }
+
+    .pipe-num {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem;
+      color: var(--accent); opacity: 0.7; text-align: center;
+    }
+
+    .pipe-title { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+    .pipe-desc  { font-size: 13px; color: var(--muted2); line-height: 1.6; }
+
+    .pipe-badge {
+      font-size: 11px; padding: 3px 10px; border-radius: 20px;
+      white-space: nowrap; font-weight: 600;
+    }
+
+    .pb-lang  { background: var(--bluebg); color: var(--blue); }
+    .pb-sent  { background: var(--greenbg); color: var(--green); }
+    .pb-patt  { background: var(--accentbg); color: var(--accent2); }
+    .pb-score { background: var(--amberbg); color: var(--amber); }
+
+    /* Signals table wrapper */
+    .table-wrap {
+      max-width: 900px; margin: 0 auto 4rem;
+      padding: 0 1.5rem;
+    }
+
+    .table-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+
+    .table-header {
+      padding: 1rem 1.4rem; border-bottom: 1px solid var(--border);
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--muted); display: flex; justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Score meaning */
+    .score-guide {
+      max-width: 900px; margin: 0 auto 5rem;
+      padding: 0 1.5rem;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    }
+
+    .score-card {
+      border-radius: var(--radius); padding: 1.4rem 1.5rem;
+      border: 1px solid;
+    }
+
+    .sc-fake    { background: rgba(224,62,62,0.07); border-color: rgba(224,62,62,0.2); }
+    .sc-suspicious { background: rgba(240,165,0,0.07); border-color: rgba(240,165,0,0.2); }
+    .sc-genuine { background: rgba(38,201,138,0.07); border-color: rgba(38,201,138,0.2); }
+
+    .sc-range {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 1.8rem; letter-spacing: -0.04em; margin-bottom: 6px;
+    }
+
+    .sc-fake .sc-range { color: var(--accent2); }
+    .sc-suspicious .sc-range { color: var(--amber); }
+    .sc-genuine .sc-range { color: var(--green); }
+
+    .sc-label { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+    .sc-desc  { font-size: 13px; color: var(--muted2); line-height: 1.6; }
+
+    /* Limitations callout */
+    .callout {
+      max-width: 900px; margin: 0 auto 4rem;
+      padding: 0 1.5rem;
+    }
+
+    .callout-inner {
+      background: var(--amberbg); border: 1px solid rgba(240,165,0,0.25);
+      border-radius: var(--radius); padding: 1.4rem 1.6rem;
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+
+    .callout-icon { font-size: 1.4rem; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+    .callout-title { font-weight: 600; font-size: 14px; color: var(--amber); margin-bottom: 5px; }
+    .callout-text  { font-size: 13px; color: var(--muted2); line-height: 1.65; }
+
+    @media (max-width: 640px) {
+      .pipe-step { grid-template-columns: 40px 1fr; }
+      .pipe-badge { display: none; }
+      .score-guide { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+<div class="page-wrap">
+
+  <!-- ── HERO ── -->
+  <div class="hiw-hero fade-up">
+    <div class="section-tag">Methodology</div>
+    <h1 class="section-title" style="font-size:clamp(2rem,4vw,2.8rem)">How ReviewGuard<br/>detects fake reviews</h1>
+    <p class="section-sub" style="margin:0 auto">
+      No black boxes. Here's exactly how our rule-based detection engine works, signal by signal.
+    </p>
+  </div>
+
+  <!-- ── PIPELINE ── -->
+  <div class="pipeline fade-up-1">
+
+    <div class="pipe-step">
+      <div class="pipe-num">01</div>
+      <div>
+        <div class="pipe-title">Text Ingestion & Preprocessing</div>
+        <div class="pipe-desc">The review text is cleaned and tokenized. Words are normalized to lowercase, punctuation patterns are preserved (they carry signal), and character counts are recorded.</div>
+      </div>
+      <div class="pipe-badge pb-lang">NLP</div>
+    </div>
+
+    <div class="pipe-step">
+      <div class="pipe-num">02</div>
+      <div>
+        <div class="pipe-title">Language Pattern Analysis</div>
+        <div class="pipe-desc">We scan for superlative overload (4+ extreme adjectives), repetitive word usage (same key words ≥3 times), vague generic phrases like "very good" and "recommend everyone", and excessive capitalization.</div>
+      </div>
+      <div class="pipe-badge pb-lang">Language</div>
+    </div>
+
+    <div class="pipe-step">
+      <div class="pipe-num">03</div>
+      <div>
+        <div class="pipe-title">Sentiment Authenticity Check</div>
+        <div class="pipe-desc">Genuine reviews almost always contain at least one qualification or minor criticism. We check for the absence of any negative sentiment in high-rating reviews — a strong fake signal.</div>
+      </div>
+      <div class="pipe-badge pb-sent">Sentiment</div>
+    </div>
+
+    <div class="pipe-step">
+      <div class="pipe-num">04</div>
+      <div>
+        <div class="pipe-title">Specificity & Detail Scan</div>
+        <div class="pipe-desc">Real users mention price paid (₹1499), usage duration ("3 weeks"), product variants ("64GB model"), or comparisons ("unlike my old phone"). We check if any such specifics exist in the text.</div>
+      </div>
+      <div class="pipe-badge pb-patt">Detail</div>
+    </div>
+
+    <div class="pipe-step">
+      <div class="pipe-num">05</div>
+      <div>
+        <div class="pipe-title">Behavioral Pattern Matching</div>
+        <div class="pipe-desc">Fake reviews often praise the seller's delivery speed more than the product itself. We detect excessive seller mentions, generic reviewer usernames, and short unsubstantiated submissions.</div>
+      </div>
+      <div class="pipe-badge pb-patt">Behavior</div>
+    </div>
+
+    <div class="pipe-step">
+      <div class="pipe-num">06</div>
+      <div>
+        <div class="pipe-title">Weighted Score Aggregation</div>
+        <div class="pipe-desc">Each triggered signal adds (or subtracts, for genuine indicators) a weighted value to the total fake score. The final score is normalized to 0–100, and a verdict is assigned at thresholds 38 and 65.</div>
+      </div>
+      <div class="pipe-badge pb-score">Scoring</div>
+    </div>
+
+  </div>
+
+  <!-- ── SIGNALS TABLE ── -->
+  <div class="table-wrap fade-up-2">
+    <div style="margin-bottom:1rem">
+      <div class="section-tag">Signal Reference</div>
+      <h2 class="section-title" style="font-size:1.6rem">All 13 detection signals</h2>
+    </div>
+
+    <div class="table-card">
+      <div class="table-header">
+        <span>Signal</span>
+        <span>Risk Weight</span>
+      </div>
+      <table class="signals-table">
+        <tr>
+          <td><strong style="font-size:13px">Superlative Overload</strong><br/><span style="font-size:12px;color:var(--muted2)">4+ extreme adjectives (best, perfect, amazing…)</span></td>
+          <td><span class="sig-badge high">High · +14</span></td>
+        </tr>
+        <tr>
+          <td><strong style="font-size:13px">Vague Generic Language</strong><br/><span style="font-size:12px;color:var(--muted2)">"very good", "recommend everyone", "nice product"</span></td>
+          <td><span class="sig-badge high">High · +13</span></td>
+        </tr>
+        <tr>
+          <td><strong style="font-size:13px">Seller Praise Overload</strong><br/><span style="font-size:12px;color:var(--muted2)">2+ mentions of fast delivery, great seller, etc.</span></td>
+          <td><span class="sig-badge high">High · +11</span></td>
+        </tr>
+        <tr>
+          <td><strong style="font-size:13px">Repetitive Word Usage</strong><br/><span style="font-size:12px;color:var(--muted2)">Same words repeated 3+ times</span></td>
+          <td><span class="sig-badge high">High · +10</span></td>
+        </tr>
+        <tr>
+          <td><strong style="font-size:13px">No Negatives (high rating)</strong><br/><span style="font-size:12px;color:var(--muted2)">4–5 stars with zero criticism or qualifications</span></td>
+          <td><span class="sig-badge med">Medium · +10</span></td>
+        </tr>
+        <tr>
+          <td><strong style="font-size:13px">Excessive Exclamations</strong><br/><span style="font-size:12px;color:var(--muted2)">2+ double exclamations or 4+ exclamation marks</span></td>
+          <td><span class="sig-badge med">Medium · +8</span></td>
+        </tr>
+        <tr>
+          <td><strong style="font-size:13px">Very Short Review</strong><br/><span style="font-size:12px;color:var(--muted2)">Under 80 characters</span></td>
+          <td><span class="sig-badge med">Medium · +8</span></td>
+        </tr>
+        <tr>
+          <td><strong style="font-size:13px">Excessive Capitals</strong><br/><span style="font-size:12px;color:var(--muted2)">15%+ of words are ALL-CAPS</span></td>
+          <td><span class="sig-badge med">Medium · +12</span></td>
+        </tr>
+        <tr>
+          <td><strong style="font-size:13px">Generic Reviewer Name</strong><br/><span style="font-size:12px;color:var(--muted2)">Username matches patterns like "VerifiedBuyer2024"</span></td>
+          <td><span class="sig-badge low">Low · +6</span></td>
+        </tr>
+        <tr>
+          <td><strong style="font-size:13px">Lacks Specifics</strong><br/><span style="font-size:12px;color:var(--muted2)">No prices, dates, models or comparisons</span></td>
+          <td><span class="sig-badge med">Medium · +15</span></td>
+        </tr>
+        <tr>
+          <td><strong style="font-size:13px">✅ Contains Specific Details</strong><br/><span style="font-size:12px;color:var(--muted2)">Prices, usage duration, variants mentioned — genuine signal</span></td>
+          <td><span class="sig-badge low" style="background:var(--greenbg);color:var(--green)">Genuine · −14</span></td>
+        </tr>
+        <tr>
+          <td><strong style="font-size:13px">✅ Balanced Criticism</strong><br/><span style="font-size:12px;color:var(--muted2)">Review contains downsides or qualifications — genuine signal</span></td>
+          <td><span class="sig-badge low" style="background:var(--greenbg);color:var(--green)">Genuine · −12</span></td>
+        </tr>
+        <tr>
+          <td><strong style="font-size:13px">✅ Detailed & Long</strong><br/><span style="font-size:12px;color:var(--muted2)">280+ characters — genuine signal</span></td>
+          <td><span class="sig-badge low" style="background:var(--greenbg);color:var(--green)">Genuine · −10</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SCORE GUIDE ── -->
+  <div style="max-width:900px;margin:0 auto 2rem;padding:0 1.5rem">
+    <div class="section-tag">Score Interpretation</div>
+    <h2 class="section-title" style="font-size:1.6rem;margin-bottom:1.5rem">What the fake score means</h2>
+  </div>
+
+  <div class="score-guide fade-up-3">
+    <div class="score-card sc-genuine">
+      <div class="sc-range">0–37</div>
+      <div class="sc-label">Likely Genuine ✅</div>
+      <div class="sc-desc">Few or no red flags detected. The review shows language patterns and detail levels consistent with real user experience. Proceed with moderate confidence.</div>
+    </div>
+    <div class="score-card sc-suspicious">
+      <div class="sc-range">38–64</div>
+      <div class="sc-label">Suspicious ⚠️</div>
+      <div class="sc-desc">Some concerning patterns present. Not definitively fake, but cross-reference with other reviews. Look for a spread of ratings from different reviewer profiles.</div>
+    </div>
+    <div class="score-card sc-fake">
+      <div class="sc-range">65–100</div>
+      <div class="sc-label">Likely Fake 🚨</div>
+      <div class="sc-desc">Multiple strong fake signals triggered. This review has a high probability of being incentivized, bot-generated, or written by a paid reviewer network.</div>
+    </div>
+  </div>
+
+  <!-- ── LIMITATIONS ── -->
+  <div class="callout fade-up-4">
+    <div class="callout-inner">
+      <div class="callout-icon">⚠️</div>
+      <div>
+        <div class="callout-title">Important Limitations</div>
+        <div class="callout-text">
+          ReviewGuard is a heuristic tool, not a definitive verdict machine. Some genuine reviews may score poorly (e.g. a non-native English speaker writing simply) and some sophisticated fakes may score well. Always treat the result as one data point among many. The most reliable approach is to read a sample of reviews across multiple star ratings before making any purchase decision.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CTA ── -->
+  <div style="text-align:center; padding-bottom:5rem">
+    <a class="btn-primary" href="detector.html">🔍 Try the Detector Now</a>
+  </div>
+
+</div>
+
+<div id="footer-placeholder"></div>
+
+<script src="../js/shared.js"></script>
+<script>
+  renderNav('howitworks');
+  renderFooter();
+</script>
+</body>
+</html>

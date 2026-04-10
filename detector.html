@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detector — ReviewGuard</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+<div class="page-wrap">
+
+  <!-- ── HISTORY BAR ── -->
+  <div class="history-bar" id="historyBar" style="display:none; padding-top:1.2rem;">
+    <div class="history-title">Recent Analyses</div>
+    <div class="history-grid" id="historyGrid"></div>
+  </div>
+
+  <!-- ── MAIN LAYOUT ── -->
+  <div class="detector-layout">
+
+    <!-- LEFT: INPUT -->
+    <div class="det-left">
+      <h1 class="page-title">Review Detector</h1>
+      <p class="page-sub">Paste any review from Amazon or Flipkart. Our engine runs 8+ checks instantly.</p>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Platform</span>
+          <div class="platform-toggle">
+            <button class="plat-btn active" id="btnAmz" onclick="setPlatform('Amazon', this)">🛒 Amazon</button>
+            <button class="plat-btn" id="btnFlp" onclick="setPlatform('Flipkart', this)">🏷️ Flipkart</button>
+          </div>
+        </div>
+
+        <div class="panel-body">
+          <!-- Review text -->
+          <div style="margin-bottom:0.3rem">
+            <label style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:5px;display:block">Review Text</label>
+            <textarea id="reviewText" placeholder="Paste the product review here…" oninput="onTextInput()"></textarea>
+            <div class="char-count" id="charCount">0 characters</div>
+          </div>
+
+          <!-- Examples -->
+          <div class="example-strip">
+            <span style="font-size:11px;color:var(--muted);align-self:center;margin-right:2px">Try:</span>
+            <button class="ex-chip" onclick="loadExample('fake')">🔴 Fake</button>
+            <button class="ex-chip" onclick="loadExample('suspicious')">🟡 Suspicious</button>
+            <button class="ex-chip" onclick="loadExample('genuine')">🟢 Genuine</button>
+          </div>
+
+          <!-- Meta fields -->
+          <div class="field-row" style="margin-top:14px">
+            <div class="field-group">
+              <label>Star Rating</label>
+              <div class="star-row" id="starRow">
+                <span class="star" onclick="setStar(1)">★</span>
+                <span class="star" onclick="setStar(2)">★</span>
+                <span class="star" onclick="setStar(3)">★</span>
+                <span class="star" onclick="setStar(4)">★</span>
+                <span class="star" onclick="setStar(5)">★</span>
+              </div>
+            </div>
+            <div class="field-group">
+              <label>Reviewer Name</label>
+              <input type="text" id="reviewerName" placeholder="e.g. Rahul M."/>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group" style="grid-column:1/-1">
+              <label>Product Category</label>
+              <select id="category">
+                <option value="">Select category (optional)</option>
+                <option>Electronics</option>
+                <option>Fashion & Clothing</option>
+                <option>Home & Kitchen</option>
+                <option>Beauty & Health</option>
+                <option>Books</option>
+                <option>Sports & Fitness</option>
+                <option>Toys & Games</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="analyze-btn" id="analyzeBtn" onclick="runAnalysis()">
+            🔍 Analyze Review
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: RESULTS -->
+    <div class="det-right" id="detRight">
+      <div class="result-empty" id="emptyState">
+        <div class="result-empty-icon">🔎</div>
+        <div class="result-empty-text">
+          Your analysis results will appear here.<br/>
+          Paste a review and click <strong>Analyze</strong>.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="footer-placeholder"></div>
+
+<script src="../js/engine.js"></script>
+<script src="../js/shared.js"></script>
+<script>
+renderNav('detector');
+renderFooter();
+
+/* ─── State ─── */
+let platform     = 'Amazon';
+let selectedStar = 0;
+let history      = JSON.parse(localStorage.getItem('rg_history') || '[]');
+
+renderHistory();
+
+/* ─── Examples ─── */
+const EXAMPLES = {
+  fake: {
+    text: 'BEST PRODUCT EVER!!! I am so happy with this. Very good. Very nice. Very satisfied. Everyone should buy this!! Best purchase of my life. 100% recommend. Excellent. Perfect. Wow amazing superb fantastic product. I love it very much. Very very good quality. Best best best!',
+    rating: 5, name: 'VerifiedBuyer2024', category: 'Electronics'
+  },
+  suspicious: {
+    text: 'Amazing product! Just what I needed. Works perfectly as described. Delivery was very fast and packaging was very good. Would definitely buy again from this seller. Great overall experience. Very happy with my purchase! Highly recommend to everyone.',
+    rating: 5, name: 'happy_customer', category: 'Home & Kitchen'
+  },
+  genuine: {
+    text: "Been using this for about 3 weeks now. Build quality is decent for the price — the plastic body feels a bit cheap but has held up. Battery life is around 6 hours with my usage, not the 10 hours they claim. The charging port is slightly loose. Earphones that came in box are pretty bad, I replaced them with my own. Overall decent value for ₹1499, but don't expect flagship quality. Camera is OK in daylight, really struggles at night.",
+    rating: 3, name: 'Rohit Sharma', category: 'Electronics'
+  }
+};
+
+function loadExample(type) {
+  const ex = EXAMPLES[type];
+  document.getElementById('reviewText').value = ex.text;
+  document.getElementById('reviewerName').value = ex.name;
+  document.getElementById('category').value = ex.category;
+  setStar(ex.rating);
+  onTextInput();
+  showToast('Example loaded — hit Analyze!');
+}
+
+/* ─── Platform ─── */
+function setPlatform(p, el) {
+  platform = p;
+  document.querySelectorAll('.plat-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+/* ─── Stars ─── */
+function setStar(v) {
+  selectedStar = v;
+  document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('lit', i < v));
+}
+
+/* ─── Char count ─── */
+function onTextInput() {
+  const len = document.getElementById('reviewText').value.length;
+  document.getElementById('charCount').textContent = len + ' characters';
+}
+
+/* ─── Analysis ─── */
+function runAnalysis() {
+  const text = document.getElementById('reviewText').value.trim();
+  if (!text) { showToast('Please paste a review first.'); return; }
+
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Analyzing…';
+
+  showSpinner();
+
+  setTimeout(() => {
+    const result = RG.analyze({
+      text,
+      rating:       selectedStar || 5,
+      reviewerName: document.getElementById('reviewerName').value.trim(),
+      category:     document.getElementById('category').value,
+      platform
+    });
+
+    renderResult(result, text);
+    saveHistory(result, text);
+
+    btn.disabled = false;
+    btn.textContent = '🔍 Analyze Review';
+  }, 900);
+}
+
+/* ─── Render spinner ─── */
+function showSpinner() {
+  document.getElementById('detRight').innerHTML = `
+    <div class="spinner-wrap">
+      <div class="spinner"></div>
+      <div class="spinner-text">Running detection engine…</div>
+    </div>`;
+}
+
+/* ─── Render Result ─── */
+function renderResult(r, text) {
+  const vClass  = r.verdictClass;
+  const barColor = vClass === 'fake' ? 'var(--accent2)' : vClass === 'suspicious' ? 'var(--amber)' : 'var(--green)';
+
+  const signalsHTML = r.signals.map(s => `
+    <div class="signal-item">
+      <div class="sig-indicator si-${s.color}"></div>
+      <div>
+        <div class="sig-title">${s.title}</div>
+        <div class="sig-desc">${s.desc}</div>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('detRight').innerHTML = `
+    <!-- Verdict -->
+    <div class="verdict-banner vb-${vClass}">
+      <div class="vb-icon">${r.verdictEmoji}</div>
+      <div class="vb-body">
+        <div class="vb-label">${r.verdict}</div>
+        <div class="vb-desc">${r.verdictDesc}</div>
+      </div>
+      <div class="vb-score-wrap">
+        <div class="vb-score">${r.fakeScore}</div>
+        <div class="vb-score-label">/ 100 fake score</div>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="metric-row">
+      <div class="metric-card">
+        <div class="mc-name">Language Auth.</div>
+        <div class="mc-val" style="color:var(--blue)">${r.langScore}%</div>
+        <div class="mc-bar"><div class="mc-fill" id="mBar1" style="background:var(--blue);width:0%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-name">Sentiment</div>
+        <div class="mc-val" style="color:var(--green)">${r.sentScore}%</div>
+        <div class="mc-bar"><div class="mc-fill" id="mBar2" style="background:var(--green);width:0%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-name">Specificity</div>
+        <div class="mc-val" style="color:var(--amber)">${r.detailScore}%</div>
+        <div class="mc-bar"><div class="mc-fill" id="mBar3" style="background:var(--amber);width:0%"></div></div>
+      </div>
+    </div>
+
+    <!-- Signals -->
+    <div class="signals-panel">
+      <div class="sp-header">🔎 Detection Signals (${r.signals.length} triggered)</div>
+      ${signalsHTML || '<div style="padding:1rem 1.2rem;font-size:13px;color:var(--muted)">No strong signals detected.</div>'}
+    </div>
+
+    <!-- Recommendation -->
+    <div class="rec-panel">
+      <div class="rec-title">💡 Recommendation</div>
+      <div class="rec-text">${r.recommendation}</div>
+    </div>
+  `;
+
+  // Animate bars
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.getElementById('mBar1').style.width = r.langScore + '%';
+      document.getElementById('mBar2').style.width = r.sentScore + '%';
+      document.getElementById('mBar3').style.width = r.detailScore + '%';
+    }, 80);
+  });
+}
+
+/* ─── History ─── */
+function saveHistory(r, text) {
+  const entry = {
+    verdict: r.verdict,
+    verdictClass: r.verdictClass,
+    score: r.fakeScore,
+    preview: text.substring(0, 60) + '…',
+    ts: Date.now()
+  };
+  history.unshift(entry);
+  if (history.length > 6) history.pop();
+  localStorage.setItem('rg_history', JSON.stringify(history));
+  renderHistory();
+}
+
+function renderHistory() {
+  if (!history.length) return;
+  document.getElementById('historyBar').style.display = 'block';
+  const dotColor = { fake: 'var(--accent2)', suspicious: 'var(--amber)', genuine: 'var(--green)' };
+  document.getElementById('historyGrid').innerHTML = history.map((h, i) => `
+    <div class="history-chip" onclick="restoreHistory(${i})">
+      <div class="hc-dot" style="background:${dotColor[h.verdictClass]}"></div>
+      ${h.verdict} · ${h.score}/100
+    </div>
+  `).join('');
+}
+
+function restoreHistory(i) {
+  const h = history[i];
+  document.getElementById('reviewText').value = h.preview;
+  showToast('Restored from history (preview only)');
+}
+
+/* ─── Toast ─── */
+function showToast(msg) {
+  let t = document.getElementById('rg-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'rg-toast';
+    t.style.cssText = 'position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:10px 18px;font-size:13px;color:var(--text);z-index:999;transition:all 0.3s;opacity:0;transform:translateY(20px)';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateY(0)';
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(20px)'; }, 2500);
+}
+</script>
+</body>
+</html>
