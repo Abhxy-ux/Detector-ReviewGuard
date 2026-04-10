@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReviewGuard — AI Fake Review Detector</title>
+  <meta name="description" content="Detect fake and incentivized reviews on Amazon & Flipkart using intelligent pattern analysis."/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<div id="nav-placeholder"></div>
+<div class="page-wrap">
+
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <div class="hero-badge">
+      <div class="badge-dot"></div>
+      Smart Review Intelligence · Free Tool
+    </div>
+
+    <h1>Stop Getting Fooled by<br/><em>Fake Reviews</em></h1>
+
+    <p class="hero-sub">
+      Millions of fake reviews manipulate buying decisions every day.
+      ReviewGuard analyzes language patterns, sentiment, and behavioral signals
+      to expose suspicious content — instantly.
+    </p>
+
+    <div class="hero-actions">
+      <a class="btn-primary" href="pages/detector.html">
+        🔍 Analyze a Review
+      </a>
+      <a class="btn-secondary" href="pages/how-it-works.html">
+        See How It Works →
+      </a>
+    </div>
+
+    <!-- MOCK UI PREVIEW -->
+    <div class="hero-visual">
+      <div class="hero-card-mock">
+        <div class="mock-header">
+          <div class="mock-dots">
+            <div class="mock-dot"></div>
+            <div class="mock-dot"></div>
+            <div class="mock-dot"></div>
+          </div>
+          <span class="mock-title">reviewguard — detector</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-review-box">
+            <div class="mock-review-text">
+              "BEST PRODUCT EVER!!! Very good. Very nice. Very satisfied. Everyone should buy this. Best purchase of my life. 100% recommend!!"
+            </div>
+            <div class="mock-stars">★★★★★ · VerifiedBuyer2024</div>
+          </div>
+          <div class="mock-results">
+            <div class="mock-verdict-pill fake">🚨 LIKELY FAKE · 84%</div>
+            <div class="mock-bar-row">
+              <div class="mock-bar-label"><span>Language Authenticity</span><span>22%</span></div>
+              <div class="mock-bar-track"><div class="mock-bar-fill" style="width:22%;background:#4a87f5"></div></div>
+            </div>
+            <div class="mock-bar-row">
+              <div class="mock-bar-label"><span>Sentiment Naturalness</span><span>18%</span></div>
+              <div class="mock-bar-track"><div class="mock-bar-fill" style="width:18%;background:#26c98a"></div></div>
+            </div>
+            <div class="mock-bar-row">
+              <div class="mock-bar-label"><span>Detail & Specificity</span><span>8%</span></div>
+              <div class="mock-bar-track"><div class="mock-bar-fill" style="width:8%;background:#f0a500"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ STATS ══ -->
+  <div class="stats-band fade-up-1">
+    <div class="stat-item">
+      <div class="stat-num">42<span class="accent">%</span></div>
+      <div class="stat-label">Reviews are estimated fake globally</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">8<span class="accent">+</span></div>
+      <div class="stat-label">Behavioral signals analyzed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">2<span class="accent">x</span></div>
+      <div class="stat-label">Platforms supported</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">0<span class="accent">₹</span></div>
+      <div class="stat-label">Cost — completely free</div>
+    </div>
+  </div>
+
+  <!-- ══ FEATURES ══ -->
+  <section class="section fade-up-2">
+    <div class="section-tag">What We Detect</div>
+    <h2 class="section-title">Every trick fake reviewers use,<br/>exposed.</h2>
+    <p class="section-sub">Our rule engine checks for over 8 distinct signals associated with fake, incentivized, or bot-generated reviews.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon fi-red">🗣️</div>
+        <div class="feature-title">Language Pattern Analysis</div>
+        <div class="feature-desc">Detects excessive superlatives, generic phrasing, and template-like sentence structures common in paid reviews.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-amber">😐</div>
+        <div class="feature-title">Sentiment Authenticity</div>
+        <div class="feature-desc">Checks if the emotional tone is natural or artificially inflated with false enthusiasm and forced positivity.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-blue">🔁</div>
+        <div class="feature-title">Repetition Detection</div>
+        <div class="feature-desc">Identifies overused words and phrases that indicate bot-generated or copy-pasted review content.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-green">📋</div>
+        <div class="feature-title">Specificity Scoring</div>
+        <div class="feature-desc">Real reviews mention prices, dates, product variants, and personal comparisons. We check if any of these exist.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-red">⭐</div>
+        <div class="feature-title">Rating vs Content Match</div>
+        <div class="feature-desc">5-star reviews with zero criticism are suspicious. We cross-verify the star rating against the actual written content.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-amber">👤</div>
+        <div class="feature-title">Reviewer Profile Signals</div>
+        <div class="feature-desc">Generic usernames like "HappyBuyer2024" correlate with fake account networks — we flag these patterns.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ HOW IT WORKS TEASER ══ -->
+  <section class="section fade-up-3" style="border-top:1px solid var(--border)">
+    <div class="section-tag">Process</div>
+    <h2 class="section-title">Three steps to the truth</h2>
+    <p class="section-sub">Our analysis pipeline runs entirely in your browser — no data is stored or sent anywhere.</p>
+
+    <div class="steps-grid">
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <div class="step-title">Paste the review</div>
+        <div class="step-desc">Copy any product review from Amazon or Flipkart and paste it into the detector. Add the star rating and reviewer name for bonus accuracy.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <div class="step-title">Engine analyzes</div>
+        <div class="step-desc">Our rule-based AI engine scans the text for 8+ behavioral and linguistic signals associated with fake review patterns.</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <div class="step-title">Get your verdict</div>
+        <div class="step-desc">Receive a clear Fake Score, individual signal breakdown, and a recommendation on whether to trust the review.</div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:3rem">
+      <a class="btn-primary" href="pages/how-it-works.html">Read the Full Methodology →</a>
+    </div>
+  </section>
+
+  <!-- ══ CTA BANNER ══ -->
+  <section style="padding:3rem 1.5rem 5rem; max-width:700px; margin:0 auto; text-align:center;" class="fade-up-4">
+    <div style="background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:3rem 2rem;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(224,62,62,0.5),transparent)"></div>
+      <div style="font-size:2rem;margin-bottom:1rem">🛡️</div>
+      <h2 style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.7rem;letter-spacing:-0.03em;margin-bottom:0.8rem">Ready to spot fake reviews?</h2>
+      <p style="color:var(--muted2);margin-bottom:1.8rem;font-size:15px;line-height:1.7">Paste your first review in under 10 seconds. No sign-up, no data collection, completely free.</p>
+      <a class="btn-primary" href="pages/detector.html" style="display:inline-flex">🔍 Open the Detector</a>
+    </div>
+  </section>
+
+</div>
+
+<div id="footer-placeholder"></div>
+
+<script src="js/shared.js"></script>
+<script>
+  renderNav('home');
+  renderFooter();
+</script>
+</body>
+</html>
